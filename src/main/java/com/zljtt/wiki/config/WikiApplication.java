@@ -1,5 +1,6 @@
 package com.zljtt.wiki.config;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -8,7 +9,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
 
 @ComponentScan(basePackages = "com.zljtt")
-@SpringBootApplication
+@SpringBootApplication()
+@MapperScan("com.zljtt.wiki.mapper")
 public class WikiApplication {
 
     public static final Logger LOG = LoggerFactory.getLogger(WikiApplication.class);
