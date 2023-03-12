@@ -1,30 +1,87 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view/>
+  <a-layout style="min-height: 100vh">
+    <a-layout-sider v-model:collapsed="collapsed" collapsible>
+      <div class="logo"/>
+      <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline">
+        <a-menu-item key="1">
+          <pie-chart-outlined/>
+          <span>Option 1</span>
+        </a-menu-item>
+        <a-menu-item key="2">
+          <desktop-outlined/>
+          <span>Option 2</span>
+        </a-menu-item>
+        <a-sub-menu key="sub1">
+          <template #title>
+            <span>
+              <user-outlined/>
+              <span>User</span>
+            </span>
+          </template>
+          <a-menu-item key="3">Tom</a-menu-item>
+          <a-menu-item key="4">Bill</a-menu-item>
+          <a-menu-item key="5">Alex</a-menu-item>
+        </a-sub-menu>
+        <a-sub-menu key="sub2">
+          <template #title>
+            <span>
+              <team-outlined/>
+              <span>Team</span>
+            </span>
+          </template>
+          <a-menu-item key="6">Team 1</a-menu-item>
+          <a-menu-item key="8">Team 2</a-menu-item>
+        </a-sub-menu>
+        <a-menu-item key="9">
+          <file-outlined/>
+          <span>File</span>
+        </a-menu-item>
+      </a-menu>
+    </a-layout-sider>
+    <router-view/>
+  </a-layout>
 </template>
 
+<script lang="ts">
+import {
+  PieChartOutlined,
+  DesktopOutlined,
+  UserOutlined,
+  TeamOutlined,
+  FileOutlined,
+} from '@ant-design/icons-vue';
+import {defineComponent, ref} from 'vue';
+
+export default defineComponent({
+  components: {
+    PieChartOutlined,
+    DesktopOutlined,
+    UserOutlined,
+    TeamOutlined,
+    FileOutlined,
+  },
+  data() {
+    return {
+      collapsed: ref<boolean>(false),
+      selectedKeys: ref<string[]>(['1']),
+    };
+  },
+});
+</script>
+
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+#components-layout-demo-side .logo {
+  height: 32px;
+  margin: 16px;
+  background: rgba(255, 255, 255, 0.3);
 }
 
-nav {
-  padding: 30px;
+.site-layout .site-layout-background {
+  background: #fff;
 }
 
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
+[data-theme='dark'] .site-layout .site-layout-background {
+  background: #141414;
 }
 
-nav a.router-link-exact-active {
-  color: #42b983;
-}
 </style>
