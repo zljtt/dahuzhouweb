@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zljtt.wiki.mapper.CardMapper">
+  <resultMap id="BaseResultMap" type="com.zljtt.wiki.domain.Card">
+    <id column="set_code" jdbcType="VARCHAR" property="setCode" />
+    <id column="collector_number" jdbcType="VARCHAR" property="collectorNumber" />
+    <result column="foil" jdbcType="BIT" property="foil" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    set_code, collector_number, foil
+  </sql>
+  <select id="selectByExample" parameterType="com.zljtt.wiki.domain.CardExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from card
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="map" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from card
+    where set_code = #{setCode,jdbcType=VARCHAR}
+      and collector_number = #{collectorNumber,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from card
+    where set_code = #{setCode,jdbcType=VARCHAR}
+      and collector_number = #{collectorNumber,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.zljtt.wiki.domain.CardExample">
+    delete from card
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.zljtt.wiki.domain.Card">
+    insert into card (set_code, collector_number, foil
+      )
+    values (#{setCode,jdbcType=VARCHAR}, #{collectorNumber,jdbcType=VARCHAR}, #{foil,jdbcType=BIT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.zljtt.wiki.domain.Card">
+    insert into card
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="setCode != null">
+        set_code,
+      </if>
+      <if test="collectorNumber != null">
+        collector_number,
+      </if>
+      <if test="foil != null">
+        foil,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="setCode != null">
+        #{setCode,jdbcType=VARCHAR},
+      </if>
+      <if test="collectorNumber != null">
+        #{collectorNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="foil != null">
+        #{foil,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.zljtt.wiki.domain.CardExample" resultType="java.lang.Long">
+    select count(*) from card
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update card
+    <set>
+      <if test="record.setCode != null">
+        set_code = #{record.setCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.collectorNumber != null">
+        collector_number = #{record.collectorNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="record.foil != null">
+        foil = #{record.foil,jdbcType=BIT},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update card
+    set set_code = #{record.setCode,jdbcType=VARCHAR},
+      collector_number = #{record.collectorNumber,jdbcType=VARCHAR},
+      foil = #{record.foil,jdbcType=BIT}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zljtt.wiki.domain.Card">
+    update card
+    <set>
+      <if test="foil != null">
+        foil = #{foil,jdbcType=BIT},
+      </if>
+    </set>
+    where set_code = #{setCode,jdbcType=VARCHAR}
+      and collector_number = #{collectorNumber,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zljtt.wiki.domain.Card">
+    update card
+    set foil = #{foil,jdbcType=BIT}
+    where set_code = #{setCode,jdbcType=VARCHAR}
+      and collector_number = #{collectorNumber,jdbcType=VARCHAR}
+  </update>
+</mapper>

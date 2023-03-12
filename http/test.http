@@ -19,6 +19,8 @@ name=good
 
 ###
 
-GET http://localhost:25565/test/list
+GET http://localhost:25565/deck/list?name=Atraxa
+
+
 
 ###
