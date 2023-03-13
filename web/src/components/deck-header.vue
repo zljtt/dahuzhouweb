@@ -1,16 +1,35 @@
 <template>
-  <a-layout-header style="background: #fff; padding: 0">
-    <a-breadcrumb style="margin: 16px 16px">
-      <a-breadcrumb-item>User</a-breadcrumb-item>
-      <a-breadcrumb-item>Bill</a-breadcrumb-item>
-    </a-breadcrumb>
-  </a-layout-header>
+  <a-collapse v-model:activeKey="activeKey">
+    <a-collapse-panel key="1" v-if="deckData" :header="deckData.name" :show-arrow="false"
+                      style="-webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;">
+      <p>Description: {{ deckData.description }}</p>
+      <p>Format: {{ deckData.format }}</p>
+      <p>Public: {{ deckData.isPublic }}</p>
+    </a-collapse-panel>
+  </a-collapse>
 </template>
 
 <script lang="ts">
-import {defineComponent} from 'vue';
+import {defineComponent, onMounted, ref} from 'vue';
+import axios from "axios";
 
 export default defineComponent({
-  name: 'deck-header'
+  name: 'deck-header',
+  setup() {
+    console.log("setup");
+    const activeKey = ref(['1']);
+    const deckData = ref();
+
+    onMounted(() => {
+      axios.get("http://localhost:25565/deck?name=Atraxa").then(response => {
+        deckData.value = response.data;
+        console.log(deckData.value)
+      });
+    })
+    return {
+      activeKey,
+      deckData
+    }
+  }
 });
 </script>

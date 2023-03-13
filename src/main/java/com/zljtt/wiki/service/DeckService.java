@@ -10,6 +10,7 @@ import com.zljtt.wiki.util.CopyUtil;
 import jakarta.annotation.Resource;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import javax.lang.model.type.DeclaredType;
 import javax.naming.Name;
@@ -26,7 +27,9 @@ public class DeckService {
     public List<DeckResp> list(DeckReq req) {
         DeckExample deckExample = new DeckExample();
         DeckExample.Criteria criteria = deckExample.createCriteria();
-        criteria.andNameLike("%" + req.getName() + "%");
+        if (!ObjectUtils.isEmpty(req.getName())) {
+            criteria.andNameLike("%" + req.getName() + "%");
+        }
         return CopyUtil.copyList(deckMapper.selectByExample(deckExample), DeckResp.class);
     }
 }

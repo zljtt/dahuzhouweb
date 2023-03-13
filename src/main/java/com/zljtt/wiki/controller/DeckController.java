@@ -20,9 +20,16 @@ public class DeckController {
     private DeckService deckService;
 
     @GetMapping("/list")
-    public CommonResp<List<DeckResp>> list(DeckReq req) {
-        CommonResp<List<DeckResp>> resp = new CommonResp<>();
-        resp.setContent(deckService.list(req));
-        return resp;
+    public List<DeckResp> list(DeckReq req) {
+        return deckService.list(req);
+    }
+
+    @GetMapping()
+    public DeckResp deck(DeckReq req) {
+        List<DeckResp> list = deckService.list(req);
+        if (list.size() == 0) {
+            return null;
+        }
+        return list.get(0);
     }
 }
