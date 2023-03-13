@@ -21,7 +21,7 @@ export default defineComponent({
     const deckData = ref();
 
     onMounted(() => {
-      axios.get("http://localhost:25565/deck?name=Atraxa").then(response => {
+      axios.get("/deck?name=Atraxa").then(response => {
         deckData.value = response.data;
         console.log(deckData.value)
       });
