@@ -23,7 +23,6 @@ export default defineComponent({
     onMounted(() => {
       axios.get("/deck?name=Atraxa").then(response => {
         deckData.value = response.data;
-        console.log(deckData.value)
       });
     })
     return {
