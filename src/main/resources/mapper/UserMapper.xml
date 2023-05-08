@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.zljtt.wiki.mapper.UserMapper">
-  <resultMap id="BaseResultMap" type="com.zljtt.wiki.domain.User">
+<mapper namespace="github.zljtt.dahuzhou.mapper.UserMapper">
+  <resultMap id="BaseResultMap" type="github.zljtt.dahuzhou.domain.User">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="password" jdbcType="VARCHAR" property="password" />
@@ -67,7 +67,7 @@
   <sql id="Base_Column_List">
     id, `name`, `password`
   </sql>
-  <select id="selectByExample" parameterType="com.zljtt.wiki.domain.UserExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="github.zljtt.dahuzhou.domain.UserExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
@@ -91,19 +91,19 @@
     delete from user
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <delete id="deleteByExample" parameterType="com.zljtt.wiki.domain.UserExample">
+  <delete id="deleteByExample" parameterType="github.zljtt.dahuzhou.domain.UserExample">
     delete from user
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.zljtt.wiki.domain.User">
+  <insert id="insert" parameterType="github.zljtt.dahuzhou.domain.User">
     insert into user (id, `name`, `password`
       )
     values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.zljtt.wiki.domain.User">
+  <insert id="insertSelective" parameterType="github.zljtt.dahuzhou.domain.User">
     insert into user
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -128,7 +128,7 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.zljtt.wiki.domain.UserExample" resultType="java.lang.Long">
+  <select id="countByExample" parameterType="github.zljtt.dahuzhou.domain.UserExample" resultType="java.lang.Long">
     select count(*) from user
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
@@ -160,7 +160,7 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.zljtt.wiki.domain.User">
+  <update id="updateByPrimaryKeySelective" parameterType="github.zljtt.dahuzhou.domain.User">
     update user
     <set>
       <if test="name != null">
@@ -172,7 +172,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.zljtt.wiki.domain.User">
+  <update id="updateByPrimaryKey" parameterType="github.zljtt.dahuzhou.domain.User">
     update user
     set `name` = #{name,jdbcType=VARCHAR},
       `password` = #{password,jdbcType=VARCHAR}

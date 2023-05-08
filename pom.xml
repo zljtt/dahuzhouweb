@@ -8,11 +8,11 @@
         <version>3.0.4</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.zljtt</groupId>
-    <artifactId>wiki</artifactId>
+    <groupId>github.zljtt</groupId>
+    <artifactId>dahuzhou</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>wiki</name>
-    <description>zljtt wiki demo</description>
+    <name>dahuzhou</name>
+    <description>web server for dahuzhou</description>
     <properties>
         <java.version>17</java.version>
     </properties>

@@ -1,6 +1,6 @@
 <template>
   <a-layout-footer style="text-align: center">
-    Ant Design ©2018 Created by Ant UED
+    Built with Ant Design ©2018 by zljtt. Hosted by 氧桦铁.
   </a-layout-footer>
 </template>
 

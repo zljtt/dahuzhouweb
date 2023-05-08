@@ -1,0 +1,16 @@
+{
+  "name" : "test4",
+  "dialogs" : {
+    "dialog" : "好耶",
+    "optionCount" : 2,
+    "option1" : {
+      "text" : "选项1",
+      "next" : {
+        "dialog" : "你好耶是吧"
+      }
+    },
+    "option2" : {
+      "text" : "option 2"
+    }
+  }
+}
