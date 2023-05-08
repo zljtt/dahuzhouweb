@@ -1,6 +1,14 @@
 <template>
   <a-layout style="min-height: 100vh">
-
+    <template>
+      <editor-sidebar/>
+      <a-layout-content style="margin: 16px 16px">
+        <div :style="{ padding: '24px', background: '#fff', minHeight: '360px' }">
+          <router-view/>
+        </div>
+        <the-footer/>
+      </a-layout-content>
+    </template>
     <router-view/>
   </a-layout>
 </template>

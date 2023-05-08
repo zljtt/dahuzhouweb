@@ -6,6 +6,11 @@ import DialogEditorView from "@/views/DialogEditorView.vue";
 
 const routes: Array<RouteRecordRaw> = [
     {
+        path: '/',
+        name: 'main',
+        component: EditorView,
+    },
+    {
         path: '/editor/',
         name: 'editor',
         component: EditorView,
