@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileSystems;
 
 /**
  * Expose the website
@@ -15,19 +16,19 @@ import java.io.IOException;
 @RequestMapping("/editor/file")
 public class FileController {
 
-    @Value("${path.resourcepack}")
-    private String resourceLocation;
+    @Value("${path.texture.npc}")
+    private String textureLocation;
 
     @PostMapping("/texture")
     public String handleFileUpload(@RequestParam("file") MultipartFile file) {
-        DahuzhouApplication.LOG.info("save file + " + resourceLocation);
+        DahuzhouApplication.LOG.info("save file + " + textureLocation);
         if (file.isEmpty()) {
             return "No file uploaded";
         }
         try {
             // Save the file to a desired location
             String fileName = file.getOriginalFilename();
-            String filePath = resourceLocation + "/legendofthegreatlake/texture/npc" + fileName;
+            String filePath = textureLocation + FileSystems.getDefault().getSeparator() + fileName;
             file.transferTo(new File(filePath));
             return "File uploaded successfully";
         } catch (IOException e) {

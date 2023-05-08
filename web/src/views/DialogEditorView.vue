@@ -384,7 +384,6 @@ export class Dialog {
 
   deepSearch(searchValue: string): Dialog | undefined {
     if (this.value == searchValue) {
-      console.log("Search Success : " + searchValue)
       return this;
     }
     for (let i = 0; i < this.children.length; i++) {

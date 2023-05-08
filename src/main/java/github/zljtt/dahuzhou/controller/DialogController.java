@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -28,12 +29,12 @@ import java.util.List;
 @RequestMapping("/editor/dialog")
 public class DialogController {
 
-    @Value("${path.resourcepack}")
-    private String resourceLocation;
+    @Value("${path.dialogs}")
+    private String dialogLocation;
 
     @GetMapping("/list")
     public List<String> listNPCNames(String prefix) {
-        File directory = new File(resourceLocation + "/legendofthegreatlake/dialogs");
+        File directory = new File(dialogLocation);
         File[] files = directory.listFiles();
         List<String> fileNames = new ArrayList<>();
         if (files != null) {
@@ -48,7 +49,7 @@ public class DialogController {
 
     @GetMapping("/get")
     public ResponseEntity<byte[]> getNPCDialog(String name) throws IOException {
-        File file = new File(resourceLocation + "/legendofthegreatlake/dialogs/" + name + ".json");
+        File file = new File(dialogLocation + FileSystems.getDefault().getSeparator() + name + ".json");
         if (file.exists()) {
             byte[] jsonData = Files.readAllBytes(file.toPath());
             return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(jsonData);
@@ -59,7 +60,7 @@ public class DialogController {
 
     @PostMapping("/upload")
     public ResponseEntity<String> saveNPCDialog(@RequestBody String jsonString, String name) throws IOException {
-        File file = new File(resourceLocation + "/legendofthegreatlake/dialogs/" + name + ".json");
+        File file = new File(dialogLocation + FileSystems.getDefault().getSeparator() + name + ".json");
         DahuzhouApplication.LOG.info(jsonString);
         ObjectMapper mapper = new ObjectMapper();
         Object json = mapper.readValue(jsonString, Object.class);
