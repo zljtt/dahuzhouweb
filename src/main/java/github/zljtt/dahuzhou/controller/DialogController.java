@@ -13,10 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
@@ -54,9 +51,14 @@ public class DialogController {
     public ResponseEntity<String> getNPCDialog(String name) throws IOException {
         File file = new File(dialogLocation + FileSystems.getDefault().getSeparator() + name + ".json");
         if (file.exists()) {
-            InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(dialogLocation + FileSystems.getDefault().getSeparator() + name + ".json");
+//            BufferedReader buffer = new BufferedReader(new FileReader(dialogLocation + FileSystems.getDefault().getSeparator() + name + ".json"));
+//            StringBuilder contentBuilder = new StringBuilder();
+//            String str;
+//            while ((str = buffer.readLine()) != null) {
+//                contentBuilder.append(str).append("\n");
+//            }
             ObjectMapper mapper = new ObjectMapper();
-            JsonNode jsonNode = mapper.readValue(in, JsonNode.class);
+            Object jsonNode = mapper.readValue(new FileReader(dialogLocation + FileSystems.getDefault().getSeparator() + name + ".json"), Object.class);
             String jsonString = mapper.writeValueAsString(jsonNode);
             return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(jsonString);
         }
