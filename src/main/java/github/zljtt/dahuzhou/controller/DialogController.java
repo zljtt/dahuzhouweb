@@ -16,6 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -37,7 +39,6 @@ public class DialogController {
         File directory = new File(dialogLocation);
         File[] files = directory.listFiles();
         List<String> fileNames = new ArrayList<>();
-        DahuzhouApplication.LOG.info("Searching file with prefix " + prefix + " at " + directory.getAbsolutePath());
         if (files != null) {
             for (File file : files) {
                 if (file.isFile() && file.getName().contains(".json") && file.getName().contains(prefix)) {
@@ -49,11 +50,10 @@ public class DialogController {
     }
 
     @GetMapping("/get")
-    public ResponseEntity<byte[]> getNPCDialog(String name) throws IOException {
+    public ResponseEntity<String> getNPCDialog(String name) throws IOException {
         File file = new File(dialogLocation + FileSystems.getDefault().getSeparator() + name + ".json");
-        DahuzhouApplication.LOG.info("Try to retrieve file at " + file.getAbsolutePath());
         if (file.exists()) {
-            byte[] jsonData = Files.readAllBytes(file.toPath());
+            String jsonData = Files.readString(file.toPath(), StandardCharsets.UTF_8);
             return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(jsonData);
         } else {
             return ResponseEntity.noContent().build();
