@@ -37,6 +37,7 @@ public class DialogController {
         File directory = new File(dialogLocation);
         File[] files = directory.listFiles();
         List<String> fileNames = new ArrayList<>();
+        DahuzhouApplication.LOG.info("Searching file with prefix " + prefix + " at " + directory.getAbsolutePath());
         if (files != null) {
             for (File file : files) {
                 if (file.isFile() && file.getName().contains(".json") && file.getName().contains(prefix)) {
@@ -50,6 +51,7 @@ public class DialogController {
     @GetMapping("/get")
     public ResponseEntity<byte[]> getNPCDialog(String name) throws IOException {
         File file = new File(dialogLocation + FileSystems.getDefault().getSeparator() + name + ".json");
+        DahuzhouApplication.LOG.info("Try to retrieve file at " + file.getAbsolutePath());
         if (file.exists()) {
             byte[] jsonData = Files.readAllBytes(file.toPath());
             return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(jsonData);
@@ -61,10 +63,11 @@ public class DialogController {
     @PostMapping("/upload")
     public ResponseEntity<String> saveNPCDialog(@RequestBody String jsonString, String name) throws IOException {
         File file = new File(dialogLocation + FileSystems.getDefault().getSeparator() + name + ".json");
-        DahuzhouApplication.LOG.info(jsonString);
+        DahuzhouApplication.LOG.info("Received file: " + jsonString);
         ObjectMapper mapper = new ObjectMapper();
         Object json = mapper.readValue(jsonString, Object.class);
         String indented = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
+        DahuzhouApplication.LOG.info("Try to save to location " + file.getAbsolutePath());
         try (FileWriter fileWriter = new FileWriter(file)) {
             fileWriter.write(indented);
             System.out.println("JSON string has been written to the file.");
