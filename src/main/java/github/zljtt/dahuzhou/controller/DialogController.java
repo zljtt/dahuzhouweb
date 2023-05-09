@@ -53,7 +53,7 @@ public class DialogController {
     public ResponseEntity<String> getNPCDialog(String name) throws IOException {
         File file = new File(dialogLocation + FileSystems.getDefault().getSeparator() + name + ".json");
         if (file.exists()) {
-            String jsonData = Files.readString(file.toPath(), StandardCharsets.UTF_8);
+            String jsonData = Files.readString(file.toPath());
             return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(jsonData);
         } else {
             return ResponseEntity.noContent().build();
