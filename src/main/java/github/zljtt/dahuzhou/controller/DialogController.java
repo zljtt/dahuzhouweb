@@ -54,14 +54,11 @@ public class DialogController {
     public ResponseEntity<String> getNPCDialog(String name) throws IOException {
         File file = new File(dialogLocation + FileSystems.getDefault().getSeparator() + name + ".json");
         if (file.exists()) {
-            try (InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(dialogLocation + FileSystems.getDefault().getSeparator() + name + ".json")) {
-                ObjectMapper mapper = new ObjectMapper();
-                JsonNode jsonNode = mapper.readValue(in, JsonNode.class);
-                String jsonString = mapper.writeValueAsString(jsonNode);
-                return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(jsonString);
-            } catch (Exception e) {
-                DahuzhouApplication.LOG.info("Error retrieving file");
-            }
+            InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(dialogLocation + FileSystems.getDefault().getSeparator() + name + ".json");
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode jsonNode = mapper.readValue(in, JsonNode.class);
+            String jsonString = mapper.writeValueAsString(jsonNode);
+            return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(jsonString);
         }
         return ResponseEntity.noContent().build();
     }
