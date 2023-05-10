@@ -1,7 +1,7 @@
 <template>
-  <a-layout-sider v-model:collapsed="collapsed" collapsible style="width: 10px">
-    <div class="logo"/>
-    <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline" @click="toggleClick">
+  <a-layout-sider v-model:collapsed="collapsed" collapsible style="margin-top: -100px">
+    <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline" @click="toggleClick"
+            style="margin-top: 100px; height: 85vh">
       <a-menu-item key='user'>
         <user-outlined/>
         <span>USER</span>

@@ -51,18 +51,23 @@ public class DialogController {
     public ResponseEntity<String> getNPCDialog(String name) throws IOException {
         File file = new File(dialogLocation + FileSystems.getDefault().getSeparator() + name + ".json");
         if (file.exists()) {
-//            BufferedReader buffer = new BufferedReader(new FileReader(dialogLocation + FileSystems.getDefault().getSeparator() + name + ".json"));
-//            StringBuilder contentBuilder = new StringBuilder();
-//            String str;
-//            while ((str = buffer.readLine()) != null) {
-//                contentBuilder.append(str).append("\n");
-//            }
             ObjectMapper mapper = new ObjectMapper();
             Object jsonNode = mapper.readValue(new FileReader(dialogLocation + FileSystems.getDefault().getSeparator() + name + ".json"), Object.class);
             String jsonString = mapper.writeValueAsString(jsonNode);
             return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(jsonString);
         }
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/delete")
+    public ResponseEntity<String> deleteNPCDialog(String name) throws IOException {
+        File file = new File(dialogLocation + FileSystems.getDefault().getSeparator() + name + ".json");
+        if (file.exists()) {
+            Files.delete(file.toPath());
+            return ResponseEntity.ok("文件删除成功");
+        } else {
+            return ResponseEntity.ok("服务器没有这个文件");
+        }
     }
 
     @PostMapping("/upload")
@@ -75,11 +80,10 @@ public class DialogController {
         DahuzhouApplication.LOG.info("Try to save to location " + file.getAbsolutePath());
         try (FileWriter fileWriter = new FileWriter(file)) {
             fileWriter.write(indented);
-            System.out.println("JSON string has been written to the file.");
+            return ResponseEntity.ok("文件接受成功");
         } catch (IOException e) {
             return ResponseEntity.ok("文件接受失败，请联系技术部");
         }
-        return ResponseEntity.ok("文件接受成功");
     }
 
 }

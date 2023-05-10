@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-//import {Dialog} from '@/views/DialogEditorView.vue';
+//import {Dialog} from '@/views/dialog.vue';
 import {defineComponent, PropType} from 'vue';
 
 export default defineComponent({
