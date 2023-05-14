@@ -7,6 +7,10 @@ import 'ant-design-vue/dist/antd.css';
 import axios from "axios";
 
 axios.interceptors.request.use(function (config) {
+    const token = store.state.user.token;
+    if (token && typeof (token) != "undefined" && config.headers) {
+        config.headers.token = token;
+    }
     console.log('Requesting: ', config);
     return config;
 }, error => {
@@ -15,7 +19,12 @@ axios.interceptors.request.use(function (config) {
 axios.interceptors.response.use(function (response) {
     console.log('Obtaining: ', response);
     return response;
-}, error => {
+}, function (error) {
+    if (error.response && error.response.status === 401) {
+        console.log('Received 401 response');
+        store.commit("clearUser");
+        router.push('/home');
+    }
     return Promise.reject(error);
 });
 

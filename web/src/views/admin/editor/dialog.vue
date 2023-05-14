@@ -10,142 +10,138 @@
           @search="onSearch"
       >
       </a-auto-complete>
-      <a-button @click="onCreate" :disabled="createButtonDisabled">加载/创建</a-button>
+      <a-button @click="onCreate" :disabled="fileLoaded">加载/创建</a-button>
 
-      <template v-if="npcDisplayName">
+      <template v-if="fileLoaded">
         <a-divider></a-divider>
         <a-typography-title :level="3" v-model:content="npcDisplayName" editable style="margin-top: 5px"/>
         <a-typography-paragraph v-model:content="npcDescription" editable style="margin-top: 5px"/>
         <a-divider></a-divider>
-      </template>
-
-      <a-form ref="formRef" :model="getCurrentDialog()"
-              layout="horizontal" v-if="createButtonDisabled"
-      >
-        <a-form-item label="选择对话节点">
-          <a-tree-select
-              show-search
-              allow-clear
-              tree-default-expand-all
-              style="width: 100%"
-              defaultValue="root"
-              v-model:value="currentNodeValue"
-              :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
-              :tree-data="treeData"
-          >
-            <template #title="{ value, title }">
-              {{ getParentOption(value, title) }}
-            </template>
-          </a-tree-select>
-        </a-form-item>
-        <a-divider></a-divider>
-        <a-form-item
-            v-if="currentNodeValue !== '' && currentNodeValue !== undefined  && getCurrentDialog().title!== 'NO_DIALOG'"
-            label="NPC对话"
-            :rules="{required: true, message: '对话一定要有个头吧',trigger: 'change',}">
-          <a-input v-model:value="getCurrentDialog().title"
-                   :placeholder="getCurrentDialog().title"
-                   style="width: 100%"/>
-        </a-form-item>
-        <template
-            v-if="currentNodeValue !== '' && currentNodeValue !== undefined && getCurrentDialog().title!== 'NO_DIALOG'">
-          <a-space
-              v-for="(option, index) in getCurrentDialog()?.options ?? []" :key="option"
-              size=small direction="vertical"
-              style="width: 100%; border-style: dashed; border-color: gainsboro; border-bottom: transparent"
-          >
-            <a-form layout=horizontal style="margin-left: 10px;">
-              <a-row style="width: 100%" align="start">
-                <a-col :span="19" style="margin-top: 10px">
-                  <a-form-item label="玩家选项">
-                    <a-typography-paragraph v-model:content="option.text" editable style="margin-top: 5px"/>
-                  </a-form-item>
-                </a-col>
-                <a-col :span="5">
-                  <a-popconfirm
-                      title="真的要删除这个选项吗？这会删除所有下层目录"
-                      placement="topRight"
-                      ok-text="确定"
-                      cancel-text="取消"
-                      @confirm="removeOption(index)"
-                  >
-                    <a-button type="dashed" danger style="float: right;">
-                      删除选项
-                      <MinusCircleOutlined/>
-                    </a-button>
-                  </a-popconfirm>
-                </a-col>
-              </a-row>
-              <a-form layout="inline">
-                <a-form-item label="等级需求" :rules="{required: false}">
-                  <a-typography-paragraph v-model:content="option.requireLevel" editable
-                                          style="margin-top: 5px; width: 100px"/>
-                </a-form-item>
-                <a-form-item label="任务需求" :rules="{required: false}">
-                  <a-typography-paragraph v-model:content="option.requireQuest" editable
-                                          style="margin-top: 5px; width: 100px"/>
-                </a-form-item>
-              </a-form>
-              <a-form layout="inline" style="min-height: 45px">
-                <a-form-item label="下一级NPC对话" :rules="{required: false}">
-                  <template v-if="getCurrentDialog().children[index].title !== 'NO_DIALOG'">
-                    <a-typography-paragraph
-                        v-model:content="getCurrentDialog().children[index].title"
-                        @click="goToDirectory(getCurrentDialog().children[index].value)"
-                        editable style="margin-top: 5px"/>
-                  </template>
-                  <template v-if="getCurrentDialog().children[index].title === 'NO_DIALOG'">
-                    <a-button type="dashed"
-                              @click="addOptionDialog(index)">
-                      <PlusOutlined/>
-                      设立下级对话
-                    </a-button>
-                  </template>
-                </a-form-item>
-                <a-form-item>
-                  <template v-if="getCurrentDialog().children[index].title !== 'NO_DIALOG'">
+        <a-form ref="formRef" :model="getCurrentDialog()" layout="horizontal">
+          <a-form-item label="选择对话节点">
+            <a-tree-select
+                show-search
+                allow-clear
+                tree-default-expand-all
+                style="width: 100%"
+                defaultValue="root"
+                v-model:value="currentNodeValue"
+                :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+                :tree-data="npcDialogs"
+            >
+              <template #title="{ value, title }">
+                {{ getParentOption(value, title) }}
+              </template>
+            </a-tree-select>
+          </a-form-item>
+          <a-divider></a-divider>
+          <template
+              v-if="currentNodeValue !== '' && currentNodeValue !== undefined && getCurrentDialog().title!== 'NO_DIALOG'">
+            <a-form-item
+                label="NPC对话"
+                :rules="{required: true, message: '对话一定要有个头吧',trigger: 'change'}">
+              <a-input v-model:value="getCurrentDialog().title"
+                       :placeholder="getCurrentDialog().title"
+                       style="width: 100%"/>
+            </a-form-item>
+            <a-space
+                v-for="(option, index) in getCurrentDialog()?.options ?? []" :key="option"
+                size=small direction="vertical"
+                style="width: 100%; border-style: dashed; border-color: gainsboro; border-bottom: transparent"
+            >
+              <a-form layout=horizontal style="margin-left: 10px;">
+                <a-row style="width: 100%" align="start">
+                  <a-col :span="19" style="margin-top: 10px">
+                    <a-form-item label="玩家选项">
+                      <a-typography-paragraph v-model:content="option.text" editable style="margin-top: 5px"/>
+                    </a-form-item>
+                  </a-col>
+                  <a-col :span="5">
                     <a-popconfirm
-                        title="真的要删除所有下层对话吗？"
+                        title="真的要删除这个选项吗？这会删除所有下层目录"
+                        placement="topRight"
                         ok-text="确定"
                         cancel-text="取消"
-                        @confirm="clearOptionDialog(index)"
+                        @confirm="removeOption(index)"
                     >
-                      <MinusCircleOutlined style=""/>
+                      <a-button type="dashed" danger style="float: right;">
+                        删除选项
+                        <MinusCircleOutlined/>
+                      </a-button>
                     </a-popconfirm>
-                  </template>
-                </a-form-item>
+                  </a-col>
+                </a-row>
+                <a-form layout="inline">
+                  <a-form-item label="等级需求" :rules="{required: false}">
+                    <a-typography-paragraph v-model:content="option.requireLevel" editable
+                                            style="margin-top: 5px; width: 100px"/>
+                  </a-form-item>
+                  <a-form-item label="任务需求" :rules="{required: false}">
+                    <a-typography-paragraph v-model:content="option.requireQuest" editable
+                                            style="margin-top: 5px; width: 100px"/>
+                  </a-form-item>
+                </a-form>
+                <a-form layout="inline" style="min-height: 45px">
+                  <a-form-item label="下一级NPC对话" :rules="{required: false}">
+                    <template v-if="getCurrentDialog().children[index].title !== 'NO_DIALOG'">
+                      <a-typography-paragraph
+                          v-model:content="getCurrentDialog().children[index].title"
+                          @click="goToDirectory(getCurrentDialog().children[index].value)"
+                          editable style="margin-top: 5px"/>
+                    </template>
+                    <template v-if="getCurrentDialog().children[index].title === 'NO_DIALOG'">
+                      <a-button type="dashed"
+                                @click="addOptionDialog(index)">
+                        <PlusOutlined/>
+                        设立下级对话
+                      </a-button>
+                    </template>
+                  </a-form-item>
+                  <a-form-item>
+                    <template v-if="getCurrentDialog().children[index].title !== 'NO_DIALOG'">
+                      <a-popconfirm
+                          title="真的要删除所有下层对话吗？"
+                          ok-text="确定"
+                          cancel-text="取消"
+                          @confirm="clearOptionDialog(index)"
+                      >
+                        <MinusCircleOutlined style=""/>
+                      </a-popconfirm>
+                    </template>
+                  </a-form-item>
+                </a-form>
               </a-form>
-            </a-form>
-          </a-space>
-        </template>
-        <a-form-item
-            v-if="currentNodeValue !== '' && currentNodeValue !== undefined && getCurrentDialog().title!== 'NO_DIALOG'"
-            :rules="{required: false, message: 'Fields can not be null',trigger: 'change',}">
-          <a-button type="dashed" @click="addOption()" style="width: 100%">
-            <PlusOutlined/>
-            增加选项
-          </a-button>
-        </a-form-item>
-      </a-form>
-      <a-popconfirm v-if="npcDisplayName && npcDisplayName !== '' "
-                    title="真的要保存吗？这会覆盖原来的文件"
-                    placement="topLeft"
-                    ok-text="确定"
-                    cancel-text="取消"
-                    @confirm="sendJson()"
-      >
-        <a-button type="primary">保存</a-button>
-      </a-popconfirm>
-      <a-divider type="vertical"/>
-      <a-popconfirm v-if="npcDisplayName && npcDisplayName !== '' "
-                    title="真的要永远删除这个NPC吗？"
-                    placement="topLeft"
-                    ok-text="确定"
-                    cancel-text="取消"
-                    @confirm="onDeleteFile(npcName)"
-      >
-        <a-button :disabled="!createButtonDisabled" type="primary" danger>删除NPC</a-button>
-      </a-popconfirm>
+            </a-space>
+            <a-form-item
+                :rules="{required: false, message: 'Fields can not be null',trigger: 'change',}">
+              <a-button type="dashed" @click="addOption()" style="width: 100%">
+                <PlusOutlined/>
+                增加选项
+              </a-button>
+            </a-form-item>
+            <a-divider></a-divider>
+          </template>
+        </a-form>
+        <a-popconfirm
+            title="真的要保存吗？这会覆盖原来的文件"
+            placement="topLeft"
+            ok-text="确定"
+            cancel-text="取消"
+            @confirm="sendJson()"
+        >
+          <a-button type="primary">保存</a-button>
+        </a-popconfirm>
+        <a-divider type="vertical"/>
+        <a-popconfirm
+            title="真的要永远删除这个NPC吗？"
+            placement="topLeft"
+            ok-text="确定"
+            cancel-text="取消"
+            @confirm="onDeleteFile()"
+        >
+          <a-button :disabled="!fileLoaded" type="primary" danger>删除NPC</a-button>
+        </a-popconfirm>
+      </template>
     </a-layout-content>
   </a-layout>
 </template>
@@ -170,6 +166,13 @@ export default defineComponent({
     InboxOutlined,
   },
   setup() {
+    message.config({
+      top: '100px',
+      duration: 2,
+      maxCount: 3,
+      rtl: true,
+      prefixCls: '',
+    });
     console.log("dialog editor setup");
     // load and create npc
     const searchOptions = ref<{ value: string }[]>([]);
@@ -177,41 +180,50 @@ export default defineComponent({
       const encodedSearchText = encodeURIComponent(searchText);
       const url = `/editor/dialog/list?prefix=${encodedSearchText}`;
       axios.get(url).then(response => {
-        searchOptions.value = response.data.map((item: string) => ({value: item}));
+        if (response.data) {
+          searchOptions.value = response.data.map((item: string) => ({value: item}));
+        } else {
+          searchOptions.value = [];
+        }
       });
     };
     const npcName = ref<string>();
-    const createButtonDisabled = ref(false);
+    const fileLoaded = ref(false);
     const npcDisplayName = ref<string>();
     const npcDescription = ref<string>('');
-    const treeData = ref<TreeSelectProps['treeData']>();
+    const npcDialogs = ref<TreeSelectProps['treeData']>();
     watch(npcName, () => {
-      createButtonDisabled.value = false;
-      npcDisplayName.value = undefined;
+      fileLoaded.value = false;
     })
     const onCreate = () => {
+      const key = 'createMessage';
+      message.loading({content: "加载中...", key});
       const encodedSearchText = encodeURIComponent(npcName.value || '');
       const url = `/editor/dialog/get?name=${encodedSearchText}`;
       axios.get(url).then(response => {
-        console.log(response.data)
-        let dialogJson = response.data;
-        if (dialogJson == null || dialogJson == '') {
-          treeData.value = [new Dialog("root", "root")];
-          npcDisplayName.value = npcName.value;
-          createButtonDisabled.value = true;
-          message.success("成功创建文件");
+        if (response.data.fileStatus == "NOT_FOUND") {
+          npcDialogs.value = [new Dialog("root", "第一条对话")];
+          npcDisplayName.value = '还没有名字';
+          npcDescription.value = '还没有NPC设定';
+          fileLoaded.value = true;
+          message.loading({content: "创建新NPC", key});
           return;
         } else {
           try {
-            treeData.value = [createDialog(dialogJson["dialogs"], "root")]
+            let dialogJson = JSON.parse(response.data.content);
+            if ("dialogs" in dialogJson) {
+              npcDialogs.value = [createDialog(dialogJson["dialogs"], "root")]
+            } else {
+              npcDialogs.value = [new Dialog("root", "还没有对话")]
+            }
             npcDisplayName.value = !("name" in dialogJson) || dialogJson["name"] == '' ?
                 '还没有名字' : dialogJson["name"];
             npcDescription.value = !("description" in dialogJson) || dialogJson["description"] == '' ?
                 '还没有NPC设定' : dialogJson["description"];
-            createButtonDisabled.value = true;
-            message.success("成功读取文件");
+            fileLoaded.value = true;
+            message.success({content: response.data.message, key});
           } catch (error) {
-            message.success("文件格式错误或已损坏");
+            message.success({content: response.data.message, key});
           }
         }
       });
@@ -219,9 +231,6 @@ export default defineComponent({
 
 
     // display npc
-    const textInputLabel = ref('')
-    const childButtonLabel = ref('')
-    const displayAddButton = ref(false)
     const currentNodeValue = ref('');
     const removeOption = (index: number) => {
       let currentDialog = getCurrentDialog();
@@ -245,23 +254,22 @@ export default defineComponent({
       let currentDialog = getCurrentDialog();
       if (currentDialog) {
         currentDialog.addDialog(index);
-        //updateChildDataDisplay(currentDialog);
       }
     }
     const getParentOption = (childValue: string, title: string) => {
-      if (!treeData.value || !childValue) {
+      if (!npcDialogs.value || !childValue) {
         return "";
       }
 
       let txt = '';
       if (childValue != "root") {
-        txt += "(" + (treeData.value[0] as Dialog).searchParentOption(childValue) + ") ";
+        txt += "(" + (npcDialogs.value[0] as Dialog).searchParentOption(childValue) + ") ";
       }
       return txt + (title == "NO_DIALOG" ? "结束对话" : title);
     }
     const getCurrentDialog = () => {
-      if (treeData.value && treeData.value.length > 0) {
-        return (treeData.value[0] as Dialog).deepSearch(currentNodeValue.value)
+      if (npcDialogs.value && npcDialogs.value.length > 0) {
+        return (npcDialogs.value[0] as Dialog).deepSearch(currentNodeValue.value)
       }
       return new Dialog("", "NO_DIALOG");
     }
@@ -270,29 +278,57 @@ export default defineComponent({
     }
 
     const sendJson = () => {
-      if (treeData.value) {
+      const key = 'saveMessage';
+
+      message.loading({content: '加载中...', key})
+      if (fileLoaded.value) {
         if (!npcDisplayName.value || npcDisplayName.value == '') {
-          message.warn('NPC的名字不能为空');
+          message.warn({content: 'NPC的名字不能为空', key});
           return;
         }
-
+        if (!npcName.value) {
+          message.warn({content: 'NPC的ID不能为空', key});
+          return;
+        }
+        if (!npcDialogs.value) {
+          message.warn({content: 'NPC不能没有对话', key});
+          return;
+        }
         let jsonStr = JSON.stringify({
           name: npcDisplayName.value == '还没有名字' ? '' : npcDisplayName.value,
           description: npcDescription.value == '还没有NPC设定' ? '' : npcDescription.value,
-          dialogs: (treeData.value[0] as Dialog).toJson()
+          dialogs: (npcDialogs.value[0] as Dialog).toJson()
         })
-        if (!npcName.value || !jsonStr) {
-          message.warn('NPC的ID不能为空');
-          return;
+        try {
+          const encodedSearchText = encodeURIComponent(npcName.value);
+          const url = `/editor/dialog/upload?name=${encodedSearchText}`;
+          axios.post(url, jsonStr, {
+            headers: {'Content-Type': 'application/json'},
+          }).then((result) => message.success({content: result.data.message, key}));
+        } catch (error) {
+          message.warn({content: '保存失败', key});
         }
-        saveFile(npcName.value, jsonStr);
         return;
       }
-      message.warn('还没加载或创建NPC');
+      message.warn({content: '还没加载或创建NPC', key});
     }
-    const onDeleteFile = (deleteName: string) => {
-      if (treeData.value && npcName.value) {
-        deleteFile(npcName.value);
+    const onDeleteFile = () => {
+      const key = 'deleteMessage';
+      message.loading({content: '删除中...', key})
+      if (fileLoaded.value) {
+        if (!npcName.value) {
+          message.warn({content: 'NPC的ID不能为空', key});
+          return;
+        }
+        try {
+          const encodedSearchText = encodeURIComponent(npcName.value);
+          const url = `/editor/dialog/delete?name=${encodedSearchText}`;
+          axios.post(url, {
+            headers: {'Content-Type': 'application/json'},
+          }).then((result) => message.success({content: result.data.message, key}));
+        } catch (error) {
+          message.warn({content: '删除失败', key});
+        }
       }
     }
     return {
@@ -300,10 +336,7 @@ export default defineComponent({
       npcDisplayName,
       npcDescription,
       searchOptions,
-      createButtonDisabled,
-      textInputLabel,
-      childButtonLabel,
-      //dialogs,
+      fileLoaded,
       onSearch,
       onCreate,
       removeOption,
@@ -315,40 +348,13 @@ export default defineComponent({
       getCurrentDialog,
       sendJson,
       onDeleteFile,
-      displayAddButton,
-      treeData,
+      npcDialogs,
       currentNodeValue,
       // currentNodeData,
     };
   }
 
 });
-
-async function deleteFile(npcName: string) {
-  try {
-    const encodedSearchText = encodeURIComponent(npcName);
-    const url = `/editor/dialog/delete?name=${encodedSearchText}`;
-    const result = await axios.post(url, {
-      headers: {'Content-Type': 'application/json'},
-    });
-    message.success(result.data);
-  } catch (error) {
-    message.warn('删除失败');
-  }
-}
-
-async function saveFile(npcName: string, json: string) {
-  try {
-    const encodedSearchText = encodeURIComponent(npcName);
-    const url = `/editor/dialog/upload?name=${encodedSearchText}`;
-    const result = await axios.post(url, json, {
-      headers: {'Content-Type': 'application/json'},
-    });
-    message.success(result.data);
-  } catch (error) {
-    message.warn('保存失败');
-  }
-}
 
 export function createDialog(json: any, directory: string): Dialog {
   let dialog = new Dialog(directory, json["dialog"]);

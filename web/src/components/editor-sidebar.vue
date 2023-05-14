@@ -1,7 +1,7 @@
 <template>
-  <a-layout-sider v-model:collapsed="collapsed" collapsible style="margin-top: -100px">
+  <a-layout-sider v-model:collapsed="collapsed" style="margin-top: -100px">
     <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline" @click="toggleClick"
-            style="margin-top: 100px; height: 85vh">
+            style="margin-top: 100px; height: 100vh; width: 100%;">
       <a-menu-item key='user'>
         <user-outlined/>
         <span>USER</span>
@@ -10,21 +10,17 @@
         <desktop-outlined/>
         <span>Server</span>
       </a-menu-item>
-      <a-sub-menu key="sub2">
+      <a-sub-menu key="file">
         <template #title>
-              <span>
-                <team-outlined/>
-                <span>NPC</span>
-              </span>
+          <span>
+            <file-outlined/>
+          </span>
         </template>
         <a-menu-item key='texture'>Texture</a-menu-item>
         <a-menu-item key='dialog'>Dialog</a-menu-item>
         <a-menu-item key='quest'>Quest</a-menu-item>
+        <a-menu-item key='wiki'>Wiki</a-menu-item>
       </a-sub-menu>
-      <a-menu-item key='file'>
-        <file-outlined/>
-        <span>File</span>
-      </a-menu-item>
     </a-menu>
   </a-layout-sider>
 </template>
@@ -45,7 +41,7 @@ export default defineComponent({
   },
   data() {
     return {
-      collapsed: ref<boolean>(false),
+      collapsed: ref<boolean>(true),
       selectedKeys: ref()
     };
   },
@@ -60,6 +56,9 @@ export default defineComponent({
           break;
         case 'dialog':
           this.$router.push('/editor/dialog');
+          break;
+        case 'wiki':
+          this.$router.push('/editor/wiki');
           break;
       }
       // Handle the menu item click event here

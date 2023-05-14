@@ -1,6 +1,6 @@
 <template>
   <a-layout-footer style="text-align: center">
-    Built with Ant Design ©2018 by zljtt. Hosted by 氧桦铁.
+    Built by zljtt with Vue and Ant Design. Hosted by 氧桦铁.
   </a-layout-footer>
 </template>
 

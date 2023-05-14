@@ -23,6 +23,6 @@ GET http://localhost:25565/deck/list?name=Atraxa
 
 ###
 
-GET http://localhost:25565/editor/dialog/get?name=test1
+GET http://localhost:25565/user/login?username=zljtt&password=111
 
 ###

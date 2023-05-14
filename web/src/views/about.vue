@@ -12,9 +12,10 @@
 
 import {defineComponent, ref} from 'vue';
 import TheHeader from '@/components/the-header.vue';
+import TheFooter from '@/components/the-footer.vue';
 
 export default defineComponent({
-  components: {TheHeader},
+  components: {TheHeader, TheFooter},
   data() {
     return {
       collapsed: ref<boolean>(false),

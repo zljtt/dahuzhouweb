@@ -1,5 +1,6 @@
 {
   "name" : "test4",
+  "description" : "",
   "dialogs" : {
     "dialog" : "好耶",
     "optionCount" : 2,
